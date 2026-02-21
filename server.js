@@ -15,7 +15,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const TOLKIEN_SYSTEM_PROMPT = `You are a master scribe of Middle-earth, schooled in the high style of J.R.R. Tolkien.
+const TOLKIEN_SYSTEM_PROMPT_BASE = `You are a master scribe of Middle-earth, schooled in the high style of J.R.R. Tolkien.
 Your task is to rewrite any given text in the manner of Tolkien's prose:
 - Use archaic, elevated diction (thee, thou, thine, hath, doth, wherefore, henceforth)
 - Employ rich, poetic descriptions of nature, light, shadow, and landscape
@@ -25,8 +25,18 @@ Your task is to rewrite any given text in the manner of Tolkien's prose:
 - Do not add lengthy new content; focus on style transformation
 - Write only the transformed text, with no explanation or preamble`;
 
+const LANG_INSTRUCTION = {
+  ko: 'Write the transformed text in Korean.',
+  en: 'Write the transformed text in English.',
+};
+
+function buildSystemPrompt(lang) {
+  const instruction = LANG_INSTRUCTION[lang] ?? LANG_INSTRUCTION.ko;
+  return `${TOLKIEN_SYSTEM_PROMPT_BASE}\n- ${instruction}`;
+}
+
 app.post('/api/transform', async (req, res) => {
-  const { text } = req.body;
+  const { text, lang } = req.body;
 
   if (!text || typeof text !== 'string' || text.trim().length === 0) {
     return res.status(400).json({ error: '변환할 텍스트를 입력해주세요.' });
@@ -38,9 +48,9 @@ app.post('/api/transform', async (req, res) => {
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 2048,
-      system: TOLKIEN_SYSTEM_PROMPT,
+      system: buildSystemPrompt(lang),
       messages: [{ role: 'user', content: text.trim() }],
     });
 

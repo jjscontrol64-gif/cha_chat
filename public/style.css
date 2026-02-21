@@ -183,6 +183,46 @@ textarea:focus {
   font-family: 'Cinzel', serif;
 }
 
+/* ── Language Selector ── */
+.lang-selector {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+
+.lang-option:hover {
+  color: var(--gold-dark);
+}
+
+.lang-option input[type="radio"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.lang-option input[type="radio"]:checked {
+  background: var(--gold-dark);
+  box-shadow: 0 0 6px rgba(139,107,31,0.5);
+}
+
 /* ── Buttons ── */
 button {
   width: 100%;

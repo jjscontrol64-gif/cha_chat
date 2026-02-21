@@ -29,6 +29,8 @@ async function transformText() {
     return;
   }
 
+  const lang = document.querySelector('input[name="lang"]:checked').value;
+
   errorMsg.style.display = 'none';
   copyBtn.style.display = 'none';
   outputArea.innerHTML = '<p class="placeholder-text">변환된 문장이 이곳에 나타날 것이니...</p>';
@@ -39,7 +41,7 @@ async function transformText() {
     const response = await fetch('/api/transform', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, lang }),
     });
 
     const data = await response.json();

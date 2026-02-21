@@ -29,6 +29,16 @@
               maxlength="2000"
             ></textarea>
             <div class="char-count"><span id="charCount">0</span> / 2000</div>
+            <div class="lang-selector">
+              <label class="lang-option">
+                <input type="radio" name="lang" value="ko" checked />
+                <span>한글</span>
+              </label>
+              <label class="lang-option">
+                <input type="radio" name="lang" value="en" />
+                <span>English</span>
+              </label>
+            </div>
             <button id="transformBtn" onclick="transformText()">
               <span class="btn-icon">⚔</span> 변환하기
             </button>

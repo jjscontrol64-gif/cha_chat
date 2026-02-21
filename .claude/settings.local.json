@@ -4,7 +4,14 @@
       "Bash(npm init:*)",
       "Bash(npm install:*)",
       "Bash(dir:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(cmd /c \"dir C:\\\\Works\\\\claude\\\\cha_chat /b 2>&1\")",
+      "Bash(cmd /c \"dir C:\\\\Works\\\\claude\\\\cha_chat /A 2>&1\")",
+      "Bash(cmd /c \"dir C:\\\\Works\\\\claude\\\\cha_chat\")"
+    ],
+    "deny": [
+      "Bash(cmd /c \"dir C:\\\\Works\\\\claude\\\\cha_chat\\\\\\.env\")",
+      "Bash(cmd /c \"dir C:\\\\Works\\\\claude\\\\cha_chat\\\\node_modules\")"
     ]
   }
 }
