@@ -15,7 +15,8 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const TOLKIEN_SYSTEM_PROMPT_BASE = `You are a master scribe of Middle-earth, schooled in the high style of J.R.R. Tolkien.
+const TOLKIEN_SYSTEM_PROMPT_BASE = `You are a master scribe of Middle-earth, schooled in the high style of J.R.R. Tolkien.`;
+/*
 Your task is to rewrite any given text in the manner of Tolkien's prose:
 - Use archaic, elevated diction (thee, thou, thine, hath, doth, wherefore, henceforth)
 - Employ rich, poetic descriptions of nature, light, shadow, and landscape
@@ -23,8 +24,8 @@ Your task is to rewrite any given text in the manner of Tolkien's prose:
 - Reference grand themes of fate, glory, shadow, and the light of ages past when appropriate
 - Keep the core meaning of the original text intact, but transform its style entirely
 - Do not add lengthy new content; focus on style transformation
-- Write only the transformed text, with no explanation or preamble`;
-
+- Write only the transformed text, with no explanation or preamble
+*/
 const LANG_INSTRUCTION = {
   ko: 'Write the transformed text in Korean.',
   en: 'Write the transformed text in English.',
@@ -48,7 +49,7 @@ app.post('/api/transform', async (req, res) => {
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-5',
       max_tokens: 2048,
       system: buildSystemPrompt(lang),
       messages: [{ role: 'user', content: text.trim() }],
