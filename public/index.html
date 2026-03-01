@@ -71,6 +71,18 @@
 
       <div id="errorMsg" class="error-msg" style="display:none;"></div>
 
+      <div class="history-toggle-wrap">
+        <button id="historyToggleBtn" onclick="toggleHistory()">📜 기록 보기</button>
+      </div>
+
+      <section id="historyPanel" class="history-panel" style="display:none;">
+        <div class="history-panel-header">
+          <span class="history-panel-title">최근 변환 기록</span>
+          <button class="history-clear-btn" onclick="clearHistory()">전체 삭제</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
       <footer>
         <p>Powered by Claude &amp; the wisdom of J.R.R. Tolkien</p>
       </footer>

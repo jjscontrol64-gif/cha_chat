@@ -53,6 +53,7 @@ async function transformText() {
 
     outputArea.textContent = data.result;
     copyBtn.style.display = 'block';
+    saveToHistory(text, data.result, lang);
   } catch (err) {
     showError('서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.');
   } finally {
@@ -81,3 +82,91 @@ inputText.addEventListener('keydown', (e) => {
     transformText();
   }
 });
+
+// ── History ──────────────────────────────────────────────
+const HISTORY_KEY = 'cha_chat_history';
+const HISTORY_MAX = 5;
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY)) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToHistory(input, output, lang) {
+  const history = loadHistory();
+  history.unshift({ input, output, lang, timestamp: Date.now() });
+  if (history.length > HISTORY_MAX) history.length = HISTORY_MAX;
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  renderHistory();
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatTimestamp(ts) {
+  const diff = Date.now() - ts;
+  if (diff < 60000) return '방금 전';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}분 전`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}시간 전`;
+  return new Date(ts).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+}
+
+function renderHistory() {
+  const history = loadHistory();
+  const list = document.getElementById('historyList');
+
+  if (history.length === 0) {
+    list.innerHTML = '<p class="history-empty">기록된 변환이 없습니다.</p>';
+    return;
+  }
+
+  list.innerHTML = history.map((item, i) => `
+    <div class="history-item">
+      <div class="history-item-meta">
+        <span class="history-lang">${item.lang === 'ko' ? '한글' : 'EN'}</span>
+        <span class="history-time">${formatTimestamp(item.timestamp)}</span>
+      </div>
+      <p class="history-preview">${escapeHtml(item.input.slice(0, 60))}${item.input.length > 60 ? '…' : ''}</p>
+      <p class="history-output">${escapeHtml(item.output)}</p>
+      <button class="history-copy-btn" onclick="copyHistoryItem(${i})">📜 복사</button>
+    </div>
+  `).join('');
+}
+
+function toggleHistory() {
+  const panel = document.getElementById('historyPanel');
+  const btn = document.getElementById('historyToggleBtn');
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? '📜 기록 닫기' : '📜 기록 보기';
+}
+
+async function copyHistoryItem(index) {
+  const item = loadHistory()[index];
+  if (!item) return;
+  try {
+    await navigator.clipboard.writeText(item.output);
+    const btns = document.querySelectorAll('.history-copy-btn');
+    const btn = btns[index];
+    btn.textContent = '✓ 복사됨';
+    setTimeout(() => { btn.textContent = '📜 복사'; }, 2000);
+  } catch {
+    showError('복사에 실패했습니다.');
+  }
+}
+
+function clearHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
+}
+
+// 페이지 로드 시 기록 초기화
+renderHistory();

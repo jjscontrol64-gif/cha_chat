@@ -27,8 +27,16 @@ Your task is to rewrite any given text in the manner of Tolkien's prose:
 - Write only the transformed text, with no explanation or preamble
 */
 const LANG_INSTRUCTION = {
-  ko: 'Write the transformed text in Korean.',
-  en: 'Write the transformed text in English.',
+  ko: `Write the transformed text in Korean.
+Use the elevated, archaic style of classical Korean narrative prose —
+the tone of old tales and legends, with dignified phrasing such as
+"~하였노라", "~이로다", "~하나이다".
+Do not force nature or fate imagery where it does not fit the original meaning.`,
+
+  en: `Write the transformed text in English.
+Use Tolkien's narrative voice: unhurried, dignified, slightly archaic.
+Draw on archaic diction (thee, hath, wherefore) only where it flows naturally.
+Do not insert nature or fate imagery unless it fits the original meaning.`,
 };
 
 function buildSystemPrompt(lang) {
